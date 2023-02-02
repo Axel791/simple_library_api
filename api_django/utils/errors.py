@@ -1,0 +1,12 @@
+USER_NOT_FOUND = "USER_NOT_FOUND"
+USER_ALREADY_EXISTS = "USER_ALREADY_EXISTS"
+USER_NOT_FOUND_DESCRIPTION = "The user you are looking for was not found."
+USER_ALREADY_EXISTS_DESCRIPTION = "The user is already in the system."
+
+BOOK_NOT_FOUND = "BOOK_NOT_FOUND"
+BOOK_ALREADY_EXISTS = "BOOK_ALREADY_EXISTS"
+BOOK_NOT_FOUND_DESCRIPTION = "The book you are looking for was not found."
+BOOK_ALREADY_EXISTS_DESCRIPTION = "The book is already in the system."
+
+STATUS_NOT_FOUND = "STATUS_NOT_FOUND"
+STATUS_NOT_FOUND_DESCRIPTION = "This user status not found."
