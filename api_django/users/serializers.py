@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from users.models import UserProfile
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
 
 
 class UsersSerializer(serializers.ModelSerializer):
@@ -7,7 +9,6 @@ class UsersSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(source="user.first_name")
     last_name = serializers.CharField(source="user.last_name")
     email = serializers.EmailField(read_only=True, source="user.email")
-    phone_number = serializers.CharField(read_only=True)
     user_status = serializers.CharField(read_only=True)
 
     class Meta:
@@ -20,7 +21,6 @@ class UsersSerializer(serializers.ModelSerializer):
             'email',
             'user_status',
             'address',
-            'phone_number',
             'last_action',
             'created_at'
         )
@@ -36,13 +36,56 @@ class UsersSerializer(serializers.ModelSerializer):
         return instance
 
 
-class UserRegistrationSerializer(serializers.Serializer):
-    pass
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source="user.username")
+    password1 = serializers.CharField(max_length=30)
+    password2 = serializers.CharField(max_length=30)
+    first_name = serializers.CharField(source="user.first_name")
+    last_name = serializers.CharField(source="user.last_name")
+    email = serializers.EmailField(source="user.email")
 
+    class Meta:
+        model = UserProfile
+        fields = (
+            'id',
+            'username',
+            'password1',
+            'password2',
+            'first_name',
+            'last_name',
+            'email',
+            'address',
+        )
 
-class UserLoginSerializer(serializers.Serializer):
-    pass
+    def create(self, validated_data):
+        user_data = validated_data.pop("user")
+        user_data["password"] = make_password(validated_data.get("password1"))
+        user = User.objects.create(**user_data)
+        user.save()
+        user_profile = UserProfile.objects.create(
+            user=user,
+            address=validated_data.get("address")
+        )
+        user_profile.save()
+        return user_profile
 
+    def validate_username(self, value):
+        user = User.objects.filter(username=value).first()
+        if user is not None:
+            raise serializers.ValidationError("This username is used.")
+        return value
 
+    def validate_email(self, value):
+        user = User.objects.filter(email=value).first()
+        if user is not None:
+            raise serializers.ValidationError("This email is used.")
+        return value
+
+    def validate(self, data):
+        password1 = data.get("password1")
+        password2 = data.get("password2")
+        if password1 != password2:
+            raise serializers.ValidationError("Password mismatch.")
+        return data
 
 

@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
 
-from users.serializers import UsersSerializer
+from users.serializers import UsersSerializer,  UserRegistrationSerializer
 from utils.responses import SuccessResponse, ErrorResponse
 from django.shortcuts import get_object_or_404
 
@@ -80,5 +80,22 @@ class UsersListView(
         users = UserProfile.objects.filter(user_status=user_status)
         return SuccessResponse(
             data=UsersSerializer(users, many=True).data,
+            status=status.HTTP_200_OK
+        )
+
+
+class UserRegistration(
+    mixins.CreateModelMixin,
+    viewsets.GenericViewSet
+):
+    serializer_class = UserRegistrationSerializer
+    queryset = UserProfile.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        serializer = UserRegistrationSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return SuccessResponse(
+            data="Registration completed successfully.",
             status=status.HTTP_200_OK
         )

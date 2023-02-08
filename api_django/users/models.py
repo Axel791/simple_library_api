@@ -24,7 +24,6 @@ class UserProfile(models.Model):
         verbose_name="Роль пользователя"
     )
     address = models.CharField(max_length=100, null=True, verbose_name="Адрес")
-    phone_number = PhoneNumberField(unique=True, null=True, blank=False, verbose_name="Номер телефона")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата регистрации")
     last_action = models.DateTimeField(auto_now=True, verbose_name="Последние действия")
 

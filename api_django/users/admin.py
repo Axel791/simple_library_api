@@ -10,7 +10,6 @@ class UserProfileAdmin(admin.ModelAdmin):
         'full_name',
         'user_status',
         'address',
-        'phone_number',
         'created_at',
         'last_action'
     ]
