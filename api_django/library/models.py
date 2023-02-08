@@ -7,6 +7,7 @@ class BookAuthor(models.Model):
     date_of_birth = models.DateField(verbose_name="Дата рождения", null=True)
     date_of_death = models.DateField(verbose_name="Дата смерти", null=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Создана")
+    author_rating = models.FloatField(default=0, verbose_name="Рейтинг автора.")
 
     class Meta:
         db_table = "author"
@@ -30,6 +31,7 @@ class Book(models.Model):
     description = models.CharField(max_length=500, null=False, verbose_name="Описание")
     page_count = models.IntegerField(null=False, verbose_name="Кол-во страниц")
     created_at = models.DateTimeField(auto_now_add=True)
+    book_rating = models.FloatField(default=0, verbose_name="Рейтинг книги")
     book_status = models.CharField(
         max_length=2,
         choices=BOOK_STATUS,
